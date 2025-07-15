@@ -1,0 +1,52 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>
+        {{store.name}} | Add
+    </title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel = 'icon'  href = "{%static 'imgs/infinitfolio.png'%}"  type='image/png'>
+    <link rel = 'stylesheet' href="{%static 'css/forms.css'%}?v=1.0.3">
+</head>
+<body>
+    <div class="box">
+        <span class="title">Add Product</span>
+        <div class="input">
+            <form method="post" enctype="multipart/form-data">
+                {%csrf_token%}
+                <div class="username a">
+                    <label for="username">Product Title</label>
+                    {{Form.title}}
+                </div>
+                <div class="username a">
+                    <label for="username">Description</label>
+                    {{Form.description}}
+                </div>
+                <div class="password a">
+                    <label for="password">Image</label>
+                    {{Form.image}}
+                </div>
+                <div class="password a">
+                    <label for="password">Currency</label>
+                    {{Form.currency}}
+                </div>
+                <div class="password a">
+                    <label for="password">Price</label>
+                    {{Form.price}}
+                </div>
+                <input style="margin-top: 10px;" type="submit" value="Upload" class="submit">
+            </form>
+        </div>
+    </div>
+
+<script>
+  document.getElementById("id_title").placeholder = "Title";
+  document.getElementById("id_description").placeholder = "Description";
+  document.getElementById("id_price").placeholder = "Prcie";
+  document.getElementById("id_currency").placeholder = "Currency";
+</script>
+</body>
+</html>

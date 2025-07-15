@@ -1,0 +1,72 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RestaurantOS – Effortless Digital Menus</title>
+    <link rel="stylesheet" href="{% static 'css/index.css' %}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link rel="icon" href="{% static 'imgs/infinitfolio.png' %}" type="image/png">
+</head>
+<body>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Turn Your Menu into a Smart Digital Experience</h1>
+            <p>RestaurantOS helps you create a scannable digital menu, update products instantly, and receive orders via WhatsApp — no coding needed.</p>
+            <a href="#order" class="cta-btn">Create My Menu</a>
+        </div>
+    </section>
+
+    <!-- Features -->
+    <section class="features">
+        <div class="feature">
+            <i class="fas fa-qrcode"></i>
+            <h3>QR Code Menus</h3>
+            <p>No more printing costs. One scan = full menu experience.</p>
+        </div>
+        <div class="feature">
+            <i class="fas fa-edit"></i>
+            <h3>Instant Updates</h3>
+            <p>Edit your menu anytime with just a few clicks. It’s that simple.</p>
+        </div>
+        <div class="feature">
+            <i class="fas fa-shopping-cart"></i>
+            <h3>WhatsApp Ordering</h3>
+            <p>Your customers can order directly to your WhatsApp. Fast & personal.</p>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section class="how-it-works">
+        <h2>How It Works</h2>
+        <div class="steps">
+            <div class="step">1. You submit your store info</div>
+            <div class="step">2. We set it up for you within 24h</div>
+            <div class="step">3. Share your QR code with your customers</div>
+        </div>
+    </section>
+
+    <!-- CTA Form -->
+    <section class="cta-form" id="order">
+        <h2>Get Your Digital Menu</h2>
+        <form method="post">
+            {% csrf_token %}
+            <input type="text" name="store_name" placeholder="Store Name" required>
+            <input type="text" name="owner_name" placeholder="Your Name" required>
+            <input type="email" name="email" placeholder="Email" required>
+            <input type="text" name="phone" placeholder="WhatsApp Number" required>
+            <textarea name="notes" placeholder="Any extra notes..." rows="4"></textarea>
+            <button type="submit">Request My Menu</button>
+        </form>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2025 RestaurantOS by OP Industries. All rights reserved.</p>
+    </footer>
+
+</body>
+</html>

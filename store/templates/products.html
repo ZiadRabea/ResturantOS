@@ -1,0 +1,169 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ResturantOS | Saved Products</title>
+
+    <link rel="icon" href="{% static 'imgs/infinitfolio.png' %}" type="image/png">
+    <link rel="stylesheet" href="{% static 'css/products.css' %}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-N37B2KNWMJ"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-N37B2KNWMJ');
+    </script>
+
+    <!-- Adsense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7827616110280134" crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <!-- Header -->
+    <div class="header desktop-header">
+        {%if not saved_products%}
+        <div class="logo">
+                <img src="{{store.logo.url}}" alt="{{ store.name }} Logo">
+            <h1>{{store.name}}</h1>
+        </div>
+        {%else%}
+        <div class="logo">
+            <img src="{%static 'imgs/saved.png'%}" alt="{{ store.name }} Logo">
+            <h1>Saved Products</h1>
+        </div>
+        {%endif%}
+        <nav>
+            <a href="/">Home</a>
+            <a href="/products/add">Add Product</a>
+            <a href="{{store.app}}">App</a>
+        </nav>
+        <div class="search-bar desktop">
+            <input type="text" placeholder="Search Products...">
+            <button>Search</button>
+        </div>
+        {%if not saved_products%}
+        <div class="cart-icon" onclick="window.open('/products/saved')">
+            <i class="fas fa-shopping-cart"></i>
+            <div class="cart-count">{{saved_products_count}}</div>
+        </div>
+        {%endif%}
+    </div>
+
+    <div class="header search-header">
+        <div class="search-bar">
+            <input type="text" placeholder="Search Products...">
+            <button>Search</button>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container">
+        {%if not saved_products%}
+        <div class="store-banner">
+            <img src="{{ store.banner.url }}" alt="{{ store.name }} Banner">
+        </div>
+        {%endif%}
+        <div class="view-mode-dropdown">
+            <button class="dropdown-toggle" onclick="toggleDropdown()">
+                <i class="fas fa-layer-group"></i> View Mode
+            </button>
+            <div class="dropdown-menu" id="viewDropdown">
+                <div onclick="setViewMode('grid')"><i class="fas fa-th-large"></i> Grid View</div>
+                <div onclick="setViewMode('menu')"><i class="fas fa-bars"></i> Menu View</div>
+            </div>
+        </div>
+
+        <div class="product-grid">
+            {% for product in products %}
+            <div class="product-container">
+                <span class="price">{{product.currency}} {{ product.price }}</span>
+                <img class="product-cover" src="{{ product.image.url }}" alt="{{ product.title }}" width="250" height="250">
+                <div class="product-title">{{ product.title }}</div>
+                <div style="display: flex; justify-content: space-evenly;">
+                    <div class="button-container">
+                        <a href="https://wa.me/{{ store.number }}?text=I'm%20interested%20in%20{{ product.title }}">
+                            <button>Order Now</button>
+                        </a>
+                    </div>
+                    <div class="button-container">
+                        {% if user.profile in product.savers.all %}
+                            <a href="/products/{{ product.id }}/save"><button class="saved_button"><i class="fas fa-save"></i></button></a>
+                        {% else %}
+                            <a href="/products/{{ product.id }}/save"><button><i class="fas fa-save"></i></button></a>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                {% if user.is_authenticated and user.profile.store == store %}
+                <div class="admin-icons">
+                    <a href="/products/{{ product.id }}/update" title="Edit" class="icon"><i class="fas fa-pen"></i></a>
+                    <a href="/products/{{ product.id }}/delete" title="Delete" class="icon" onclick="return confirm('Are you sure you want to delete this product?');"><i class="fas fa-trash-alt"></i></a>
+                </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+
+            {% if user.is_authenticated and user.profile.store == store %}
+            <div class="product-container">
+                <img class="product-cover" src="{% static 'imgs/add.png' %}" alt="Add Product">
+                <div class="product-title">Add Product</div>
+                <div class="button-container">
+                    <a href="/products/add">
+                        <button class="plus-button">
+                            <span class="plus-icon">&plus;</span>
+                        </button>
+                    </a>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <div class="footer-links">
+            <a href="#">About us</a>
+            <a href="#">Privacy Policy</a>
+            <a href="#">Home</a>
+            <a href="#">Contact US</a>
+        </div>
+        <div class="footer-info">
+            <p>&copy; {{ store.name }}. All rights reserved.</p>
+        </div>
+    </div>
+    <script>
+        function toggleDropdown() {
+            const dropdown = document.getElementById("viewDropdown");
+            dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+        }
+        
+        function setViewMode(mode) {
+            localStorage.setItem('viewMode', mode);
+            applyViewMode();
+            document.getElementById("viewDropdown").style.display = "none";
+        }
+        
+        function applyViewMode() {
+            const mode = localStorage.getItem('viewMode') || 'grid';
+            const grid = document.querySelector('.product-grid');
+        
+            if (mode === 'menu') {
+                grid.classList.add('menu-view');
+            } else {
+                grid.classList.remove('menu-view');
+            }
+        }
+        
+        document.addEventListener("DOMContentLoaded", () => {
+            applyViewMode();
+        });
+        </script>        
+</body>
+
+</html>

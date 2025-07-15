@@ -1,0 +1,118 @@
+body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background-color: #fff;
+    color: #333;
+}
+
+.hero {
+    background: linear-gradient(to right, #121212, #1f1f1f);
+    color: white;
+    padding: 60px 20px;
+    text-align: center;
+}
+
+.hero h1 {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+}
+.hero p {
+    font-size: 1.2rem;
+    max-width: 600px;
+    margin: 0 auto 30px;
+}
+.cta-btn {
+    background-color: #28a745;
+    color: white;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.features {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    padding: 40px 20px;
+    background-color: #f8f8f8;
+}
+.feature {
+    flex: 1;
+    max-width: 300px;
+    text-align: center;
+    margin: 20px;
+}
+.feature i {
+    font-size: 40px;
+    color: #28a745;
+}
+.feature h3 {
+    margin: 15px 0 10px;
+}
+
+.how-it-works {
+    background-color: #fff;
+    padding: 40px 20px;
+    text-align: center;
+}
+.how-it-works h2 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+}
+.steps {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+.step {
+    background-color: #efefef;
+    border-radius: 8px;
+    margin: 10px;
+    padding: 15px 25px;
+    font-weight: bold;
+}
+
+.cta-form {
+    padding: 40px 20px;
+    background-color: #1e1e1e;
+    color: white;
+    text-align: center;
+}
+.cta-form h2 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+}
+.cta-form form {
+    max-width: 500px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+}
+.cta-form input,
+.cta-form textarea {
+    margin-bottom: 15px;
+    padding: 10px;
+    border: none;
+    border-radius: 6px;
+}
+.cta-form button {
+    padding: 12px;
+    background-color: #28a745;
+    color: white;
+    font-weight: bold;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+.cta-form button:hover {
+    background-color: #218838;
+}
+
+footer {
+    background-color: #121212;
+    color: #aaa;
+    text-align: center;
+    padding: 20px;
+}
