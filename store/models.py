@@ -23,7 +23,7 @@ class Product(models.Model):
     currency = models.CharField(choices=currencies)
     price = models.IntegerField()
     savers = models.ManyToManyField(Profile, related_name="product_savers", null=True, blank=True)
-    is_avaialbe = models.BooleanField(default=True, null=True, blank=True)
+    is_available = models.BooleanField(default=True, null=True, blank=True)
     def __str__(self):
         return f"{self.title}"
 

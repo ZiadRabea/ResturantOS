@@ -40,7 +40,7 @@
         {%endif%}
         <nav>
             <a href="/">Home</a>
-            <a href="/products/add">Add Product</a>
+            <a href="/products/add">Add</a>
             <a href="{{store.app}}">App</a>
         </nav>
         <div class="search-bar desktop">
@@ -104,20 +104,18 @@
                 </div>
                 
                 {% if user.is_authenticated and user.profile.store == store %}
-                <div class="admin-icons">
-                    <a href="/products/{{ product.id }}/update" title="Edit" class="icon"><i class="fas fa-pen"></i></a>
-                    <a href="/products/{{ product.id }}/delete" title="Delete" class="icon" onclick="return confirm('Are you sure you want to delete this product?');"><i class="fas fa-trash-alt"></i></a>
-                </div>
-
-                <div class="admin-icons">
-                    <span>is is_available?</span>
-                    {if product.is_available}
-                        <input type="checkbox" onclick="window.open('/products/{{product.id}}/avtoggle')">
-                    {%else%}
-                        <input type="checkbox" checked onclick="window.open('/products/{{product.id}}/avtoggle')">
-                    {%endif%}
-
-                </div>
+                    <div class="admin-icons">
+                        <a href="/products/{{ product.id }}/update" title="Edit" class="icon"><i class="fas fa-pen"></i></a>
+                        <a href="/products/{{ product.id }}/delete" title="Delete" class="icon" onclick="return confirm('Are you sure you want to delete this product?');"><i class="fas fa-trash-alt"></i></a>
+                    </div>
+                    <div class="admin-icons">
+                        <span>is is_available?</span>
+                        {%if product.is_available%}
+                            <input type="checkbox" onclick="window.open('/products/{{product.id}}/avtoggle')">
+                        {%else%}
+                            <input type="checkbox" checked onclick="window.open('/products/{{product.id}}/avtoggle')">
+                        {%endif%}
+                    </div>
                 {% endif %}
             </div>
             {% endfor %}

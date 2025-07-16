@@ -123,10 +123,10 @@ def available_product_toggle(request, id):
     product = Product.objects.get(id=id)
 
     if store and store == product.store:
-        if not product.is_avaialbe:
-            product.is_avaialbe = True
+        if not product.is_available:
+            product.is_available = True
         else:
-            product.is_avaialbe = False
+            product.is_available = False
         product.save()
         return redirect(f"/stores/{store.id}")
     else:
