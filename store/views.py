@@ -114,3 +114,20 @@ def saved_products(request):
     }
     return render(request, "products.html", context)
 
+@login_required
+def available_product_toggle(request, id):
+    try :
+        store = request.user.profile.store
+    except:
+        store = None
+    product = Product.objects.get(id=id)
+
+    if store and store == product.store:
+        if not product.is_avaialbe:
+            product.is_avaialbe = True
+        else:
+            product.is_avaialbe = False
+        product.save()
+        return redirect(f"/stores/{store.id}")
+    else:
+        return redirect("/error")

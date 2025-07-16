@@ -30,7 +30,8 @@ urlpatterns = [
     path('products/<int:id>/delete', delete_product),
     path('products/<int:id>/update', update_product),
     path('products/<int:id>/save', save_product),
-    path('products/saved', saved_products)
+    path('products/<int:id>/avtoggle', available_product_toggle),
+    path('products/saved', saved_products),
 ]
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
