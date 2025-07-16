@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from .forms import *
+from .filters import ProductFilter
 # Create your views here.
 def home(request):
     return render(request, "index.html")
@@ -37,6 +38,8 @@ def add_product(request):
 def products(request, id):
     store = Store.objects.get(id=id)
     products = Product.objects.filter(store=store)
+    filter = ProductFilter(request.GET, queryset=products)
+    products = filter.qs
     try:
         profile = request.user.profile
         saved_products_count = Product.objects.filter(savers=profile).count()

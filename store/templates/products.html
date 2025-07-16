@@ -38,14 +38,12 @@
             <h1>Saved Products</h1>
         </div>
         {%endif%}
-        <nav>
-            <a href="/">Home</a>
-            <a href="/products/add">Add</a>
-            <a href="{{store.app}}">App</a>
-        </nav>
         <div class="search-bar desktop">
-            <input type="text" placeholder="Search Products...">
-            <button>Search</button>
+            <form method="get" enctype="multipart/form-data">
+                {%csrf_token%}
+                <input type="text" name="description" placeholder="Search Products...">
+                <button type="submit">Search</button>
+            </form>
         </div>
         {%if not saved_products%}
         <div class="cart-icon" onclick="window.open('/products/saved')">
@@ -57,8 +55,11 @@
 
     <div class="header search-header">
         <div class="search-bar">
-            <input type="text" placeholder="Search Products...">
-            <button>Search</button>
+            <form method="get" enctype="multipart/form-data" style="display: flex; align-items: center; justify-content: space-around;">
+                {%csrf_token%}
+                <input type="text" name="description" placeholder="Search Products...">
+                <button type="submit">Search</button>
+            </form>
         </div>
     </div>
 
