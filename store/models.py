@@ -22,6 +22,7 @@ class Product(models.Model):
     currencies = (("egp", "egp"), ("usd", "usd"), ("eur", "eur"))
     currency = models.CharField(choices=currencies)
     price = models.IntegerField()
+    category = models.ForeignKey("Category", null=True, blank=True, on_delete=models.CASCADE)
     savers = models.ManyToManyField(Profile, related_name="product_savers", null=True, blank=True)
     is_available = models.BooleanField(default=True, null=True, blank=True)
     def __str__(self):
@@ -38,3 +39,11 @@ class StoreRequest(models.Model):
 
     def __str__(self):
         return f"{self.submitted_at} | {self.store_name}"
+
+class Category(models.Model):
+    store = models.ForeignKey(Store, null=True, blank=True, on_delete=models.CASCADE)
+    name = models.CharField(max_length=100)
+    image = models.ImageField(upload_to="Categories", null=True, blank=True, storage=MediaCloudinaryStorage)
+
+    def __str__(self):
+        return f"{self.name} | {self.store.name}" 

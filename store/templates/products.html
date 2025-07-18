@@ -77,6 +77,7 @@
             <div class="dropdown-menu" id="viewDropdown">
                 <div onclick="setViewMode('grid')"><i class="fas fa-th-large"></i> Grid View</div>
                 <div onclick="setViewMode('menu')"><i class="fas fa-bars"></i> Menu View</div>
+                <!-- <div onclick="setViewMode('table')"><i class="fas fa-table"></i> Table View</div> -->
             </div>
         </div>
 
@@ -134,6 +135,86 @@
                 </div>
             </div>
             {% endif %}
+
+            <table class="product-table hidden" id="tableView">
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Price</th>
+                    <th>Category</th>
+                    <th>Availability</th>
+                    <th>Order</th>
+                    <th>Save</th>
+                    {% if user.is_authenticated and user.profile.store == store %}
+                      <th>Edit</th>
+                      <th>Delete</th>
+                    {% endif %}
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for product in products %}
+                  <tr>
+                    <td>{{ product.title }}</td>
+                    <td>{{ product.currency }} {{ product.price }}</td>
+                    <td>{{ product.category.name }}</td>
+                    <!-- Availability with toggle for owner -->
+                    <td>
+                      {% if user.is_authenticated and user.profile.store == store %}
+                        <input
+                          type="checkbox"
+                          {% if product.is_available %}checked{% endif %}
+                          onclick="window.open('/products/{{ product.id }}/avtoggle')"
+                          title="Toggle Availability"
+                        >
+                      {% else %}
+                        {% if product.is_available %}
+                          Available
+                        {% else %}
+                          Not available
+                        {% endif %}
+                      {% endif %}
+                    </td>
+                    <td>
+                      <a href="https://wa.me/{{ store.number }}?text=I'm%20interested%20in%20{{ product.title }}" title="Order via WhatsApp">
+                        <i class="fas fa-shopping-cart"></i>
+                      </a>
+                    </td>
+                    <td>
+                      {% if user.is_authenticated %}
+                        {% if user.profile in product.savers.all %}
+                          <a href="/products/{{ product.id }}/save" title="Unsave"><i class="fas fa-bookmark saved_button"></i></a>
+                        {% else %}
+                          <a href="/products/{{ product.id }}/save" title="Save"><i class="far fa-bookmark"></i></a>
+                        {% endif %}
+                      {% else %}
+                        <span title="Log in to save"><i class="far fa-bookmark"></i></span>
+                      {% endif %}
+                    </td>
+                    {% if user.is_authenticated and user.profile.store == store %}
+                    <td>
+                      <a href="/products/{{ product.id }}/update" title="Edit"><i class="fas fa-pen icon"></i></a>
+                    </td>
+                    <td>
+                      <a href="/products/{{ product.id }}/delete" title="Delete" onclick="return confirm('Delete this product?');">
+                        <i class="fas fa-trash-alt icon"></i>
+                      </a>
+                    </td>
+                    {% endif %}
+                  </tr>
+                  {% endfor %}
+              
+                  {% if user.is_authenticated and user.profile.store == store %}
+                  <tr>
+                    <td colspan="{% if user.profile.store == store %}8{% else %}6{% endif %}" style="text-align: center; padding: 20px;">
+                      <a href="/products/add" class="plus-button" style="font-size: 24px; text-decoration: none;">
+                        <i class="fas fa-plus-circle"></i> Add New Product
+                      </a>
+                    </td>
+                  </tr>
+                  {% endif %}
+                </tbody>
+            </table>
+              
         </div>
     </div>
 
@@ -151,31 +232,53 @@
     </div>
     <script>
         function toggleDropdown() {
-            const dropdown = document.getElementById("viewDropdown");
-            dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+          const dropdown = document.getElementById("viewDropdown");
+          dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
         }
-        
+      
         function setViewMode(mode) {
-            localStorage.setItem('viewMode', mode);
-            applyViewMode();
-            document.getElementById("viewDropdown").style.display = "none";
+          localStorage.setItem('viewMode', mode);
+          applyViewMode();
+          document.getElementById("viewDropdown").style.display = "none";
         }
-        
+      
         function applyViewMode() {
-            const mode = localStorage.getItem('viewMode') || 'grid';
-            const grid = document.querySelector('.product-grid');
-        
-            if (mode === 'menu') {
-                grid.classList.add('menu-view');
-            } else {
-                grid.classList.remove('menu-view');
-            }
+          const mode = localStorage.getItem('viewMode') || 'grid';
+          const gridWrapper = document.querySelector('.product-grid');
+          const cards = gridWrapper.querySelectorAll('.product-container');
+          const table = document.getElementById('tableView');
+      
+          // reset everything
+          cards.forEach(c => c.classList.remove('hidden'));
+          gridWrapper.classList.remove('menu-view');
+          table.classList.add('hidden');
+      
+          if (mode === 'grid') {
+            // cards shown, default grid layout
+          }
+          else if (mode === 'menu') {
+            gridWrapper.classList.add('menu-view');
+          }
+          else if (mode === 'table') {
+            // hide cards, show table
+            cards.forEach(c => c.classList.add('hidden'));
+            table.classList.remove('hidden');
+          }
         }
-        
+      
         document.addEventListener("DOMContentLoaded", () => {
-            applyViewMode();
+          // ensure our Table button is in the dropdown
+          const dd = document.getElementById("viewDropdown");
+          if (!document.getElementById("tableViewBtn")) {
+            const tableBtn = document.createElement('div');
+            tableBtn.id = 'tableViewBtn';
+            tableBtn.innerHTML = '<i class="fas fa-table"></i> Table View';
+            tableBtn.onclick = () => setViewMode('table');
+            dd.appendChild(tableBtn);
+          }
+          applyViewMode();
         });
-        </script>        
+      </script>          
 </body>
 
 </html>

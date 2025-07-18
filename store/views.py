@@ -20,20 +20,46 @@ def add_product(request):
         return redirect("/error")
     else:
         if request.method == "POST":
-            form = ProductForm(request.POST, request.FILES)
+            form = ProductForm(request.POST, request.FILES, store=store)
             if form.is_valid():
                 myform = form.save(commit=False)
                 myform.store = store
                 myform.save()
                 return redirect(f"/stores/{store.id}")
         else:
-            form = ProductForm()
+            form = ProductForm(store=store)
         
         context = {
             "Form" : form,
             "store": store
         }
         return render(request, "add_product.html", context)
+
+@login_required
+def add_category(request):
+    user = request.user.profile
+    try:
+        store = user.store
+    except:
+        store = None
+    if not store:
+        return redirect("/error")
+    else:
+        if request.method == "POST":
+            form = CategoryForm(request.POST, request.FILES)
+            if form.is_valid():
+                myform = form.save(commit=False)
+                myform.store = store
+                myform.save()
+                return redirect(f"/products/add")
+        else:
+            form = CategoryForm()
+        
+        context = {
+            "Form" : form,
+            "store": store
+        }
+        return render(request, "add_category.html", context)
 
 def products(request, id):
     store = Store.objects.get(id=id)
@@ -80,14 +106,14 @@ def update_product(request, id):
         return redirect("/error")
     else:
         if request.method == "POST":
-            form = ProductForm(request.POST, request.FILES, instance=product)
+            form = ProductForm(request.POST, request.FILES, instance=product, store=store)
             if form.is_valid():
                 myform = form.save(commit=False)
                 myform.store = store
                 myform.save()
                 return redirect(f"/stores/{store.id}")
         else:
-            form = ProductForm(instance=product)
+            form = ProductForm(instance=product, store=store)
         
         context = {
             "Form" : form,

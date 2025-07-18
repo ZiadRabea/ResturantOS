@@ -26,6 +26,7 @@ urlpatterns = [
     path('accounts/', include('django.contrib.auth.urls')),
     path('error/', error),
     path('products/add', add_product, name="create_product"),
+    path('categories/add', add_category, name="create_cateogry"),
     path('stores/<int:id>', products),
     path('products/<int:id>/delete', delete_product),
     path('products/<int:id>/update', update_product),
