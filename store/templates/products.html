@@ -29,7 +29,7 @@
     <div class="header desktop-header">
         {%if not saved_products%}
         <div class="logo">
-                <img src="{{store.logo.url}}" alt="{{ store.name }} Logo">
+                <img src="{{store.logo.url}}" alt="{{ store.name }} Logo" style="border-radius: 100%;">
             <h1>{{store.name}}</h1>
         </div>
         {%else%}
@@ -92,9 +92,15 @@
                 <div class="product-title">{{ product.title }}</div>
                 <div style="display: flex; justify-content: space-evenly;">
                     <div class="button-container">
+                      {%if not store.custom_order_link%}
                         <a href="https://wa.me/{{ store.number }}?text=I'm%20interested%20in%20{{ product.title }}">
                             <button>Order Now</button>
                         </a>
+                      {%else%}
+                        <a href="{{store.custom_order_link}}">
+                          <button>Order Now</button>
+                        </a>
+                      {%endif%}
                     </div>
                     <div class="button-container">
                         {% if user.profile in product.savers.all %}
@@ -175,9 +181,15 @@
                       {% endif %}
                     </td>
                     <td>
-                      <a href="https://wa.me/{{ store.number }}?text=I'm%20interested%20in%20{{ product.title }}" title="Order via WhatsApp">
-                        <i class="fas fa-shopping-cart"></i>
-                      </a>
+                      {%if not store.custom_order_link%}
+                        <a href="https://wa.me/{{ store.number }}?text=I'm%20interested%20in%20{{ product.title }}" title="Order via WhatsApp">
+                          <i class="fas fa-shopping-cart"></i>
+                        </a>
+                      {%else%}
+                        <a href="{{store.custom_order_link}}" title="Order via WhatsApp">
+                          <i class="fas fa-shopping-cart"></i>
+                        </a>
+                      {%endif%}
                     </td>
                     <td>
                       {% if user.is_authenticated %}

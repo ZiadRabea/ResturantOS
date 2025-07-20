@@ -10,6 +10,7 @@ class Store(models.Model):
     banner = models.ImageField(upload_to="banners", storage=MediaCloudinaryStorage)
     app = models.CharField(max_length=1000)
     number = models.CharField(max_length=20)
+    custom_order_link = models.CharField(max_length=1000, null=True, blank=True, default=None)
 
     def __str__(self):
         return f"{self.name} | {self.owner}"
