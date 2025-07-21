@@ -23,9 +23,14 @@ class Product(models.Model):
     currencies = (("egp", "egp"), ("usd", "usd"), ("eur", "eur"))
     currency = models.CharField(choices=currencies)
     price = models.IntegerField()
+    date = models.DateTimeField(auto_now_add=True)
     category = models.ForeignKey("Category", null=True, blank=True, on_delete=models.CASCADE)
     savers = models.ManyToManyField(Profile, related_name="product_savers", null=True, blank=True)
     is_available = models.BooleanField(default=True, null=True, blank=True)
+
+    class Meta:
+        ordering=["-date"]
+        
     def __str__(self):
         return f"{self.title}"
 
