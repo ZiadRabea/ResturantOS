@@ -1,7 +1,9 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator
 from .forms import *
 from .filters import ProductFilter
+
 # Create your views here.
 def home(request):
     return render(request, "index.html")
@@ -66,13 +68,16 @@ def products(request, id):
     products = Product.objects.filter(store=store)
     filter = ProductFilter(request.GET, queryset=products)
     products = filter.qs
+    paginator = Paginator(products, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
     try:
         profile = request.user.profile
         saved_products_count = Product.objects.filter(savers=profile).count()
     except:
         saved_products_count = 0
     context = {
-        "products": products,
+        "products": page_obj,
         "store" : store,
         "saved_products": False,
         "saved_products_count": saved_products_count
@@ -137,8 +142,13 @@ def save_product(request, id):
 def saved_products(request):
     profile = request.user.profile
     products = Product.objects.filter(savers=profile)
+    filter = ProductFilter(request.GET, queryset=products)
+    products = filter.qs
+    paginator = Paginator(products, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
     context = {
-        "products": products,
+        "products": page_obj,
         "saved_products": True,
     }
     return render(request, "products.html", context)

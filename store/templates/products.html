@@ -8,7 +8,7 @@
     <title>ResturantOS | Saved Products</title>
 
     <link rel="icon" href="{% static 'imgs/infinitfolio.png' %}" type="image/png">
-    <link rel="stylesheet" href="{% static 'css/products.css' %}?v=1.0.1">
+    <link rel="stylesheet" href="{% static 'css/products.css' %}?v=1.1.0">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 
     <!-- Google Analytics -->
@@ -226,7 +226,19 @@
                   {% endif %}
                 </tbody>
             </table>
-              
+        </div>
+        <div class="pagination">
+            {% if products.has_previous %}
+                <a href="?page=1" class="page-btn">&laquo;</a>
+                <a href="?page={{ products.previous_page_number }}" class="page-btn">‹</a>
+            {% endif %}
+        
+            <span class="current-page">Page {{ products.number }} of {{ products.paginator.num_pages }}</span>
+        
+            {% if products.has_next %}
+                <a href="?page={{ products.next_page_number }}" class="page-btn">›</a>
+                <a href="?page={{ products.paginator.num_pages }}" class="page-btn">&raquo;</a>
+            {% endif %}
         </div>
     </div>
 
