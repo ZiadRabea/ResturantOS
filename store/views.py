@@ -66,6 +66,7 @@ def add_category(request):
 def products(request, id):
     store = Store.objects.get(id=id)
     products = Product.objects.filter(store=store)
+    categories = Category.objects.filter(store=store)
     filter = ProductFilter(request.GET, queryset=products)
     products = filter.qs
     paginator = Paginator(products, 10)
@@ -79,6 +80,7 @@ def products(request, id):
     context = {
         "products": page_obj,
         "store" : store,
+        "categories": categories,
         "saved_products": False,
         "saved_products_count": saved_products_count
     }

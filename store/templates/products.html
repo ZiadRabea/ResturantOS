@@ -8,7 +8,7 @@
     <title>ResturantOS | Saved Products</title>
 
     <link rel="icon" href="{% static 'imgs/infinitfolio.png' %}" type="image/png">
-    <link rel="stylesheet" href="{% static 'css/products.css' %}?v=1.1.0">
+    <link rel="stylesheet" href="{% static 'css/products.css' %}?v=1.1.3">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 
     <!-- Google Analytics -->
@@ -77,7 +77,7 @@
             <div class="dropdown-menu" id="viewDropdown">
                 <div onclick="setViewMode('grid')"><i class="fas fa-th-large"></i> Grid View</div>
                 <div onclick="setViewMode('menu')"><i class="fas fa-bars"></i> Menu View</div>
-                <!-- <div onclick="setViewMode('table')"><i class="fas fa-table"></i> Table View</div> -->
+                <div onclick="setViewMode('categories')"><i class="fa-solid fa-layer-group"></i> Categories</div>
             </div>
         </div>
 
@@ -227,6 +227,24 @@
                 </tbody>
             </table>
         </div>
+        {% if categories %}
+          <div id="categoryPanel" class="category-grid hidden">
+              {% for category in categories %}
+              <div class="category-tile" onclick="filterByCategory('{{ category.id }}')">
+                  <img src="{{ category.image.url }}" alt="{{ category.name }}" class="category-image">
+                  <p class="category-title">{{ category.name }}</p>
+              </div>
+              {% endfor %}
+
+              {% if user.is_authenticated and user.profile.store == store %}
+              <div class="category-tile add-category" onclick="window.location.href='/categories/add'">
+                  <img src="{% static 'imgs/add.png' %}" alt="Add Category" class="category-image">
+                  <p class="category-title">Add Category</p>
+              </div>
+              {% endif %}
+          </div>
+        {% endif %}
+
         <div class="pagination">
             {% if products.has_previous %}
                 <a href="?page=1" class="page-btn">&laquo;</a>
@@ -255,54 +273,78 @@
         </div>
     </div>
     <script>
-        function toggleDropdown() {
-          const dropdown = document.getElementById("viewDropdown");
-          dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+      function toggleDropdown() {
+        const dropdown = document.getElementById("viewDropdown");
+        dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+      }
+    
+      function setViewMode(mode) {
+        const current = localStorage.getItem('viewMode') || 'grid';
+    
+        // If switching into categories, save the current products‑view
+        if (mode === 'categories') {
+          localStorage.setItem('prevViewMode', current);
         }
-      
-        function setViewMode(mode) {
-          localStorage.setItem('viewMode', mode);
-          applyViewMode();
-          document.getElementById("viewDropdown").style.display = "none";
+    
+        // Store the new mode (might be grid/menu/table/categories)
+        localStorage.setItem('viewMode', mode);
+        applyViewMode();
+        document.getElementById("viewDropdown").style.display = "none";
+      }
+    
+      function applyViewMode() {
+        const mode = localStorage.getItem('viewMode') || 'grid';
+        const gridWrapper = document.querySelector('.product-grid');
+        const cards = gridWrapper.querySelectorAll('.product-container');
+        const table = document.getElementById('tableView');
+        const categories = document.getElementById('categoryPanel');
+    
+        // reset everything
+        cards.forEach(c => c.classList.remove('hidden'));
+        gridWrapper.classList.remove('menu-view');
+        table.classList.add('hidden');
+        categories.classList.add('hidden');
+    
+        if (mode === 'grid') {
+          // default card grid
         }
-      
-        function applyViewMode() {
-          const mode = localStorage.getItem('viewMode') || 'grid';
-          const gridWrapper = document.querySelector('.product-grid');
-          const cards = gridWrapper.querySelectorAll('.product-container');
-          const table = document.getElementById('tableView');
-      
-          // reset everything
-          cards.forEach(c => c.classList.remove('hidden'));
-          gridWrapper.classList.remove('menu-view');
-          table.classList.add('hidden');
-      
-          if (mode === 'grid') {
-            // cards shown, default grid layout
-          }
-          else if (mode === 'menu') {
-            gridWrapper.classList.add('menu-view');
-          }
-          else if (mode === 'table') {
-            // hide cards, show table
-            cards.forEach(c => c.classList.add('hidden'));
-            table.classList.remove('hidden');
-          }
+        else if (mode === 'menu') {
+          gridWrapper.classList.add('menu-view');
         }
-      
-        document.addEventListener("DOMContentLoaded", () => {
-          // ensure our Table button is in the dropdown
-          const dd = document.getElementById("viewDropdown");
-          if (!document.getElementById("tableViewBtn")) {
-            const tableBtn = document.createElement('div');
-            tableBtn.id = 'tableViewBtn';
-            tableBtn.innerHTML = '<i class="fas fa-table"></i> Table View';
-            tableBtn.onclick = () => setViewMode('table');
-            dd.appendChild(tableBtn);
-          }
-          applyViewMode();
-        });
-      </script>          
+        else if (mode === 'table') {
+          cards.forEach(c => c.classList.add('hidden'));
+          table.classList.remove('hidden');
+        }
+        else if (mode === 'categories') {
+          cards.forEach(c => c.classList.add('hidden'));
+          categories.classList.remove('hidden');
+        }
+      }
+    
+      document.addEventListener("DOMContentLoaded", () => {
+        // ensure our Table button is in the dropdown
+        const dd = document.getElementById("viewDropdown");
+        if (!document.getElementById("tableViewBtn")) {
+          const tableBtn = document.createElement('div');
+          tableBtn.id = 'tableViewBtn';
+          tableBtn.innerHTML = '<i class="fas fa-table"></i> Table View';
+          tableBtn.onclick = () => setViewMode('table');
+          dd.appendChild(tableBtn);
+        }
+        applyViewMode();
+      });
+    
+      function filterByCategory(categoryId) {
+        // restore the previous products view
+        const prev = localStorage.getItem('prevViewMode') || 'grid';
+        localStorage.setItem('viewMode', prev);
+    
+        // navigate with the category filter
+        const url = new URL(window.location.href);
+        url.searchParams.set('category', categoryId);
+        window.location.href = url.toString();
+      }
+    </script>         
 </body>
 
 </html>
