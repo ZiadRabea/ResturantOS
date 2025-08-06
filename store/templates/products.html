@@ -94,7 +94,7 @@
                     <div class="button-container">
                       {%if not store.custom_order_link%}
                       <form onsubmit="return sendOrder(event, '{{ store.number }}', '{{ product.title }}', '{{ product.price }}', '{{ product.currency }}')">
-                          {%if user.is_authenticated and user.profile.store == store%}
+                          {%if user.profile.store == store%}
                             <input type="number" name="quantity" min="1" value="1" class="order-qty" />
                           {%endif%}
                             <button type="submit" class="order-button">Order Now</button>
@@ -186,7 +186,7 @@
                     <td>
                       {%if not store.custom_order_link%}
                       <form onsubmit="return sendOrder(event, '{{ store.number }}', '{{ product.title }}', '{{ product.price }}', '{{ product.currency }}')">
-                        {%if user.is_authenticated and user.profile.store == store%}
+                        {%if user.profile.store == store%}
                         <input type="number" name="quantity" min="1" value="1" class="order-qty" style="position: static;" />
                         {%endif%}
                           <button type="submit" style="background-color: transparent; border: 0; outline: 0; cursor: pointer;">
