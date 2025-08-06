@@ -8,7 +8,7 @@
     <title>ResturantOS | Saved Products</title>
 
     <link rel="icon" href="{% static 'imgs/infinitfolio.png' %}" type="image/png">
-    <link rel="stylesheet" href="{% static 'css/products.css' %}?v=1.1.4">
+    <link rel="stylesheet" href="{% static 'css/products.css' %}?v=1.1.8">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 
     <!-- Google Analytics -->
@@ -93,9 +93,10 @@
                 <div style="display: flex; justify-content: space-evenly;">
                     <div class="button-container">
                       {%if not store.custom_order_link%}
-                        <a href="https://wa.me/{{ store.number }}?text=I'm%20interested%20in%20{{ product.title }}">
-                            <button>Order Now</button>
-                        </a>
+                      <form onsubmit="return sendOrder(event, '{{ store.number }}', '{{ product.title }}', '{{ product.price }}', '{{ product.currency }}')">
+                            <input type="number" name="quantity" min="1" value="1" class="order-qty" />
+                            <button type="submit" class="order-button">Order Now</button>
+                      </form>                    
                       {%else%}
                         <a href="{{store.custom_order_link}}">
                           <button>Order Now</button>
@@ -182,9 +183,12 @@
                     </td>
                     <td>
                       {%if not store.custom_order_link%}
-                        <a href="https://wa.me/{{ store.number }}?text=I'm%20interested%20in%20{{ product.title }}" title="Order via WhatsApp">
-                          <i class="fas fa-shopping-cart"></i>
-                        </a>
+                      <form onsubmit="return sendOrder(event, '{{ store.number }}', '{{ product.title }}', '{{ product.price }}', '{{ product.currency }}')">
+                        <input type="number" name="quantity" min="1" value="1" class="order-qty" style="position: static;" />
+                          <button type="submit" style="background-color: transparent; border: 0; outline: 0; cursor: pointer;">
+                            <i class="fas fa-shopping-cart"></i>
+                          </button>
+                      </form>
                       {%else%}
                         <a href="{{store.custom_order_link}}" title="Order via WhatsApp">
                           <i class="fas fa-shopping-cart"></i>
@@ -344,7 +348,23 @@
         url.searchParams.set('category', categoryId);
         window.location.href = url.toString();
       }
-    </script>         
+    </script>    
+    <script>
+      function sendOrder(event, number, productTitle, price, currency) {
+        event.preventDefault();
+        const form = event.target;
+        const quantity = parseInt(form.querySelector('input[name="quantity"]').value);
+        const total = quantity * price;
+        const encodedMessage = encodeURIComponent(
+          `I'm interested in ordering ${quantity}x ${productTitle}.\nTotal Price: ${currency} ${total}`
+        );
+    
+        const waURL = `https://wa.me/${number}?text=${encodedMessage}`;
+        window.open(waURL, '_blank');
+        return false;
+      }
+    </script>
+         
 </body>
 
 </html>
