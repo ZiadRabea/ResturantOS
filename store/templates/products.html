@@ -93,12 +93,17 @@
                 <div style="display: flex; justify-content: space-evenly;">
                     <div class="button-container">
                       {%if not store.custom_order_link%}
-                      <form onsubmit="return sendOrder(event, '{{ store.number }}', '{{ product.title }}', '{{ product.price }}', '{{ product.currency }}')">
-                          {%if user.profile.store == store%}
-                            <input type="number" name="quantity" min="1" value="1" class="order-qty" />
-                          {%endif%}
-                            <button type="submit" class="order-button">Order Now</button>
-                      </form>                    
+                        {%if not user.profile.store == store%}
+                          <form onsubmit="return sendOrder(event, '{{ store.number }}', '{{ product.title }}', '{{ product.price }}', '{{ product.currency }}')">
+                              
+                                <input type="number" name="quantity" min="1" value="1" class="order-qty" />
+                                <button type="submit" class="order-button">Order Now</button>
+                          </form>
+                        {%else%}
+                          <a href="https://wa.me/{{ store.number }}?text=I'm%20interested%20in%20{{ product.title }}">
+                            <button>Order Now</button>
+                          </a>
+                        {%endif%}
                       {%else%}
                         <a href="{{store.custom_order_link}}">
                           <button>Order Now</button>
@@ -185,14 +190,18 @@
                     </td>
                     <td>
                       {%if not store.custom_order_link%}
-                      <form onsubmit="return sendOrder(event, '{{ store.number }}', '{{ product.title }}', '{{ product.price }}', '{{ product.currency }}')">
-                        {%if user.profile.store == store%}
-                        <input type="number" name="quantity" min="1" value="1" class="order-qty" style="position: static;" />
-                        {%endif%}
-                          <button type="submit" style="background-color: transparent; border: 0; outline: 0; cursor: pointer;">
+                        {%if not user.profile.store == store%}
+                          <form onsubmit="return sendOrder(event, '{{ store.number }}', '{{ product.title }}', '{{ product.price }}', '{{ product.currency }}')">
+                            <input type="number" name="quantity" min="1" value="1" class="order-qty" style="position: static;" />
+                              <button type="submit" style="background-color: transparent; border: 0; outline: 0; cursor: pointer;">
+                                <i class="fas fa-shopping-cart"></i>
+                              </button>
+                          </form>
+                        {%else%}
+                          <a href="{{store.custom_order_link}}" title="Order via WhatsApp">
                             <i class="fas fa-shopping-cart"></i>
-                          </button>
-                      </form>
+                          </a>
+                        {%endif%}
                       {%else%}
                         <a href="{{store.custom_order_link}}" title="Order via WhatsApp">
                           <i class="fas fa-shopping-cart"></i>
