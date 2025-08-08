@@ -8,7 +8,7 @@
     <title>ResturantOS | Saved Products</title>
 
     <link rel="icon" href="{% static 'imgs/infinitfolio.png' %}" type="image/png">
-    <link rel="stylesheet" href="{% static 'css/products.css' %}?v=1.1.9">
+    <link rel="stylesheet" href="{% static 'css/products.css' %}?v=1.2.0">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 
     <!-- Google Analytics -->
@@ -276,7 +276,9 @@
             {% endif %}
         </div>
     </div>
-
+    <div class="floating_login" onclick="window.open('https://resturantos.opindustries.space/accounts/login?next=https://resturantos.opindustries.space/stores/{{store.id}}')">
+      <i class="fa fa-sign-in" aria-hidden="true"></i>
+    </div>
     <!-- Footer -->
     <div class="footer">
         <div class="footer-links">

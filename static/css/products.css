@@ -614,4 +614,25 @@ a {
     bottom:0;
     right:0;
     top: auto
-  }
+}
+.floating_login{
+    background: #00803f;
+    /* width: 30px; */
+    padding: 10px;
+    color: white;
+    width: 30px;
+    border-radius: 99%;
+    display: block;
+    /* width: auto; */
+    height: 30px;
+    display: flex
+;
+    justify-content: center;
+    align-items: center;
+    font-size: 22px;
+    box-shadow: 0 0 20px 2px rgba(0, 255, 255, 0.7);
+    position: fixed;
+    bottom: 50px;
+    right: 50px;
+}
+
